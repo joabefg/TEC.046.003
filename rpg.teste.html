@@ -1,0 +1,86 @@
+<script>
+hpBoss = 3000;
+let hpHeroi = 200;
+let manaHeroi = 100;
+let manaGastaTotal = 0;
+
+// 1. Função para exibir o status (Evita repetição de texto)
+function exibirStatus() {
+    alert("HP Boss: " + hpBoss + 
+          "\nMana: " + manaHeroi + 
+          "\nHP Herói: " + hpHeroi);
+}
+
+// 2. Função para o ataque do Boss (Isola a lógica aleatória)
+function turnoDoBoss() {
+    if (hpBoss > 0) {
+        if (Math.random() >= 0.8) {
+            let danoBoss = Math.random() >= 0.8 ? 35 : 15;
+            hpHeroi -= danoBoss;
+            alert("O Boss atacou! Dano causado: " + danoBoss);
+        }
+    }
+}
+
+// 3. Função para as ações do herói (Limpa o Switch Case)
+function executarAcao(escolha) {
+    switch(escolha) {
+        case 1:
+            alert("Ataque Básico. 20 dano");
+            hpBoss -= 20;
+            break;
+        case 2:
+            if (manaHeroi >= 30) {
+                alert("Skill. 50 dano");
+                hpBoss -= 50;
+                manaHeroi -= 30;
+                manaGastaTotal += 30;
+            } else {
+                alert("Mana insuficiente!");
+            }
+            break;
+        case 3:
+            if (manaGastaTotal >= 50) {
+                alert("Ultimate. 150 dano");
+                hpBoss -= 150;
+                manaGastaTotal = 0;
+            } else {
+                alert("Ultimate não carregada!");
+            }
+            break;
+        case 4:
+            if (Math.random() > 0.6) {
+                alert("Usou Potion! +50 HP");
+                hpHeroi += 50;
+            } else {
+                alert("A poção falhou!");
+            }
+            break;
+        default:
+            alert("Opção inválida!");
+    }
+}
+
+// --- FLUXO PRINCIPAL ---
+alert("O Chefe Surgiu! HP: " + hpBoss + " | Seu HP: " + hpHeroi);
+
+for (let turno = 1; turno <= 15; turno++) {
+    if (hpBoss <= 0) break;
+
+    let menu = "Escolha sua ação:\n1-Ataque | 2-Skill | 3-Ult | 4-Potion";
+    let escolha = parseInt(prompt(menu));
+
+    executarAcao(escolha);
+    manaHeroi += 5; // Recuperação passiva
+    
+    turnoDoBoss();
+    exibirStatus();
+}
+
+// Resultado Final
+if (hpBoss <= 0) {
+    alert("VITÓRIA! O Boss foi derrotado!");
+} else {
+    alert("DERROTA! O tempo acabou.");
+}
+</script>
