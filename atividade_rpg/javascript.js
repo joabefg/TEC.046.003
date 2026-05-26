@@ -7,6 +7,31 @@ class Personagem {
         this.mana = mana;
         this.energia = energia;
     }
+    hero_atacar(alvo, habilidade) {
+        if (this.mana >= habilidade.custo 
+            && this.energia >= habilidade.energia) {
+                alvo.hp = alvo.hp - habilidade.dano;
+                // Debitar Mana
+                if (habilidade.custo > 0) {
+                    this.mana -= habilidade.custo;
+                    this.energia += 50;
+                }
+                // Debitar Energia
+                if (habilidade.energia > 0) {
+                    this.energia = 0;
+                }
+            } else {
+                return "Sem mana ou energia.";
+            }
+    }
+    boss_atacar(alvo) {
+        if(this.energia >= 100) {
+            alvo.hp -= 15;
+            this.energia = 0;
+        } else {
+            this.energia += 50;
+        }
+    }
 }
 class Habilidade {
     constructor(id, nome, dano, custo, energia) {
@@ -36,12 +61,22 @@ document
 // Criar habilidades
 let containerBtn = document.getElementById("controles");
 let listaHabilidades = [
-    new Habilidade(1, "⚔️ Ataque", 4, 0, 0),
+    new Habilidade(1, "⚔️ ataque", 4, 0, 0),
     new Habilidade(2, "🪙 skill", 8, 10, 0),
     new Habilidade(3, "💥 supremo", 15, 0, 100)
 ];
 listaHabilidades.forEach(hab => {
     let btn = document.createElement("button");//<buton>
     btn.innerText = hab.nome;
+    btn.classList.add("btn","text-success-emphasis","bg-success-subtle","border","border-success-subtle");
     containerBtn.appendChild(btn);
+    btn.onclick = () => {
+        hero.hero_atacar(boss, hab);
+        atualizarTela();
+    }
 }) ;
+const atualizarTela = () => {
+    document.getElementById("hp-boss").value = boss.hp;
+    document.getElementById("mp-hero").value = hero.mana;
+    document.getElementById("en-hero").value = hero.energia;
+}
